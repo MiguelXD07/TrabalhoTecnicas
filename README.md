@@ -61,6 +61,79 @@ Cria uma classe BackgroundTiles que cria os tiles com a respetiva textura e posi
 ### -Ladder
 
 Cria a classe Ladder que cria as escadas com a textura, posição e hitbox correspondente e depois desenha a mesma.
+
+### -Map
+
+Primeiro recebe o nível em que o player está e guarda o numa variável:  ```static int currentLevel = GameState.player.level;```
+
+Depois são guardados os layouts do mapa e do background em arrays. Cada layout é um array 2D onde cada célula contém um número que representa um objeto diferente:
+```
+  static int[][,] mapLayouts = { map_layout1, map_layout2, map_layout3, map_layout4 }; // Array av alla maps
+  static int[][,] backgroundLayouts = { background_layout1, background_layout2, background_layout3, background_layout4}; // Array av alla bakgrunder
+```
+
+O mapa e background atual são definidos consoante o nível em que o player está neste momento:
+```
+    static int[,] currentMapLayout = mapLayouts[currentLevel - 1]; // Anger korrekt map beroende på spelarens level
+    static int[,] currentBackgroundLayout = backgroundLayouts[currentLevel - 1];
+```
+
+Na função Generate a primeira coisa que faz é verificar o nível em que o player está e dá load a mapa correto
+```
+  public static void Generate()
+        {
+            currentLevel = GameState.player.level;
+            currentMapLayout = mapLayouts[currentLevel - 1];
+            currentBackgroundLayout = backgroundLayouts[currentLevel - 1];
+```
+
+De seguida um ciclo for corre pelo array currentMapLayout e verifica que número está em cada célula, usando um switch case para criar o respectivo objeto para aquela posição do array:
+
+``` for (int x = 0; x < currentMapLayout.GetLength(1); x++)
+            {
+                for (int y = 0; y < currentMapLayout.GetLength(0); y++)
+                {
+                    int number = currentMapLayout[y, x];
+
+                    switch (number)
+                    {
+                        case 1:
+                            GameState.platforms.Add(new Platform(GameState.grass_texture, new Vector2(x * GameState.grass_texture.Width, y * GameState.grass_texture.Width), false, false, false));
+                            break;
+                        case 2:
+                            GameState.platforms.Add(new Platform(GameState.dirt_texture, new Vector2(x * GameState.dirt_texture.Width, y * GameState.dirt_texture.Width), false, false, false));
+                            break;
+                        case 3:
+                            GameState.platforms.Add(new Platform(GameState.grass2_texture, new Vector2(x * GameState.grass2_texture.Width, y * GameState.grass2_texture.Width), false, false, false));
+                            break;
+                        case 4:
+                            GameState.coins.Add(new Coin(GameState.coin_texture, new Vector2(x * 64 + 16, y * 64)));
+                            break;
+                        case 5:
+                            GameState.enemies.Add(new Enemy(GameState.enemy_walking_texture, new Vector2(x * 64, y * 64 - 29)));
+                            break;
+```
+
+e faz o mesmo para o background:
+```
+ for (int x = 0; x < currentBackgroundLayout.GetLength(1); x++)
+            {
+                for (int y = 0; y < currentBackgroundLayout.GetLength(0); y++)
+                {
+                    int number = currentBackgroundLayout[y, x];
+
+                    switch (number)
+                    {
+                        case 1:
+                            GameState.backgroundTiles.Add(new BackgroundTile(GameState.cloud_texture, new Vector2(x * GameState.cloud_texture.Width, y * GameState.cloud_texture.Height)));
+                            break;
+                        case 2:
+                            GameState.backgroundTiles.Add(new BackgroundTile(GameState.water1_texture, new Vector2(x * GameState.water1_texture.Width, y * 64 + 32)));
+                            break;
+                        case 3:
+                            GameState.backgroundTiles.Add(new BackgroundTile(GameState.water2_texture, new Vector2(x * GameState.water2_texture.Width, y * GameState.water2_texture.Height)));
+                            break;
+```
 ------------------------------------------------------------------------------------------------------------------------------------
 ## Sprite Classes:
 
@@ -467,3 +540,10 @@ Muda os niveis e tem uma função para sair do jogo.
 }
 ```
 -------------------------------------------------------------------------------------------------------------------------------------
+## Crítica/Observações
+
+A pasta onde se encontram as classes Player e Enemy tem o nome de Sprites e pode ser confundido com uma outra pasta Sprites no Content.
+O texto e o hud não estão centrados e são influenciados pelo movimento da camera.
+As hitboxes são um pouco estranhas, ao ponto de o jogador em certos sitios cair por uma tile ou perder sem entrar em contacto com inimigos e espinhos.
+A maneira como o criador utiliza a função update pode estar a influenciar as hitboxes.
+Por fim, tem linhas e funções no código que são redundantes ou até sem utilização.
