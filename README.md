@@ -52,7 +52,7 @@ A classe Button onde é feita a criação de um retângulo com as dimensões do 
 Por fim desenha os botões com a função draw!
 
 ------------------------------------------------------------------------------------------------------------------------------------
-## Tiles Classes
+## Tiles Classes:
 
 ### -BackgroundTile
 
