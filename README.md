@@ -26,6 +26,29 @@ Ficheiro que cria os botões de todos os menus.
 ### -Button
 A classe Button onde é feita a criação de um retângulo com as dimensões do botão e todas as informações como texto, fonte etc. são alocadas em variáveis. Depois disso é chamada a função Update para verificar a cada frame se o cursor (que está contido dentro de um retângulo que também é criado a cada frame) intercepta o retângulo criado anteriormente, se sim troca a cor do background para cinzento escuro e a do texto para branco e depois verifica se o botão esquerdo do rato foi pressionado e largado para executar a ação do botão, senão a cor de fundo do retângulo continua a ser branco e o texto preto.
 
+```
+ public void Update()
+        {
+            mouseState = Mouse.GetState();
+            Rectangle cursor = new Rectangle(mouseState.X, mouseState.Y, 10, 10); // Rektangel för muspekaren
+            if (cursor.Intersects(rectangle))
+            {
+                background_color = Color.DarkGray;
+                text_color = Color.White;
+                if (mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released) // Om man klickar
+                {
+                    clicked = true; // När clicked är true hanteras händelser i klassen där knappen finns
+                }
+            }
+            else
+            {
+                background_color = Color.White;
+                text_color = Color.Black;
+            }
+            lastMouseState = mouseState;
+        }
+```
+
 Por fim desenha os botões com a função draw!
 
 ------------------------------------------------------------------------------------------------------------------------------------
