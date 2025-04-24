@@ -21,7 +21,7 @@ Dentro da pasta content o criador tem os sprites dos personagens e objetos junta
 Dentro da pasta Sprites, que não é a mesma pasta que esta no Content, tem as classes Animation, Coin, Enemy e Player.
 
 ------------------------------------------------------------------------------------------------------------------------------------
-Sprite Classes:
+## Sprite Classes:
 
 ### -Animation
 Na class Animation o código atualiza a hitbox das animações.
@@ -156,9 +156,9 @@ Ainda na class Player o criador tem várias linhas de codiga para a colisão com
 ```
 
 ------------------------------------------------------------------------------------------------------------------------------------
-States Classes:
+## States Classes:
 
--State
+### -State
 
 Esta classe serve para ditar as propriedades que as classes State devem tomar.
 
@@ -182,7 +182,7 @@ public abstract class State
     }
 ```
 
--MenuState
+### -MenuState
 
 A classe MenuState é utilizada ao abrir o jogo.
 Ela cria um background e dois butões, o botão Play e o botão Exit.
@@ -227,7 +227,7 @@ public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 
 ```
 
--GameState
+### -GameState
 
 Esta classe engloba todo o gameplay fora dos menus.
 A classe cria e carrega todos os elementos a ser utilizados durante o gameplay.
@@ -269,7 +269,7 @@ Esta classe é portanto o culminar de todas as outras classes e dos outros eleme
 ```
 
 
--DeadState
+### -DeadState
 
 A classe DeadState é utilizada quando o jogador morre.
 Ela muda o background para uma tela preta que diz que o jogador morreu e cria dois botões, um para dar respawn e outro para voltar para o menu.
@@ -329,7 +329,7 @@ public override void LoadContent()
         }
 ```
 
--EndState
+### -EndState
 
 A classe EndState é utilizada quando o jogador ganha o jogo.
 A classe demonstra o Score e os Highscores passados.
@@ -353,9 +353,29 @@ public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         }
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-### Game1:
+## Camera:
 
-Dentro da classe Game1, o codigo define as dimensões da janela.
+Na class Camera, o código faz com que a camera mova-se para esquerda e direita fiquando centralizada no jogador, parando de se mexer quando o jogador está nos limites do mapa.
+Assim, a camara não passa da parede final ou inicial.
+```
+namespace _2DPlatformer
+{
+    internal class Camera
+    {
+        public Matrix Transform { get; private set; }
+        public void Follow(Player target)
+        {
+            var position = Matrix.CreateTranslation( MathHelper.Clamp(-target.position.X - (target.rectangle.Width / 2), -3420, -650), MathHelper.Clamp(-target.position.Y - (target.rectangle.Height / 2), -300, -3475738), 0);
+            var offset = Matrix.CreateTranslation(Game1.screenWidth / 2, Game1.screenHeight / 2 - 100, 0);
+            Transform = position * offset;
+        }
+    }
+}
+```
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Game1:
+
+Dentro da classe Game1, o código define as dimensões da janela.
 ```
        public Game1()
         {
@@ -368,7 +388,7 @@ Dentro da classe Game1, o codigo define as dimensões da janela.
         }
 ```
 
-Cria um temporizador de 100 segundos para cada nivel
+Cria um temporizador de 100 segundos para cada nivel.
 ```
  protected override void Update(GameTime gameTime)
         {
@@ -384,4 +404,23 @@ Cria um temporizador de 100 segundos para cada nivel
         }
 ```
 
-Muda os niveis e 
+Muda os niveis e tem uma função para sair do jogo.
+```
+ public void ChangeState(State state)
+        {
+            _nextState = state;
+        }
+        public void Quit()
+        {
+            this.Exit();
+        }
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.LightSkyBlue);
+            _currentState.Draw(gameTime, _spriteBatch); // Drawar aktuella staten
+            base.Draw(gameTime);
+        }
+    }
+}
+```
+-------------------------------------------------------------------------------------------------------------------------------------
