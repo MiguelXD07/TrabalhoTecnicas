@@ -19,6 +19,26 @@ Dentro da pasta content o criador tem os sprites dos personagens e objetos junta
 ![image](https://github.com/user-attachments/assets/da4bc1ec-0a7f-481b-9350-f39a3fc4878c)
 
 ------------------------------------------------------------------------------------------------------------------------------------
+## Controls Classes:
+
+Ficheiro que cria os botões de todos os menus.
+
+### -Button
+A classe Button onde é feita a criação de um retângulo com as dimensões do botão e todas as informações como texto, fonte etc. são alocadas em variáveis. Depois disso é chamada a função Update para verificar a cada frame se o cursor (que está contido dentro de um retângulo que também é criado a cada frame) intercepta o retângulo criado anteriormente, se sim troca a cor do background para cinzento escuro e a do texto para branco e depois verifica se o botão esquerdo do rato foi pressionado e largado para executar a ação do botão, senão a cor de fundo do retângulo continua a ser branco e o texto preto.
+
+Por fim desenha os botões com a função draw!
+
+------------------------------------------------------------------------------------------------------------------------------------
+## Tiles Classes
+
+### -BackgroundTile
+
+Cria uma classe BackgroundTiles que cria os tiles com a respetiva textura e posição e por fim desenha-os.
+
+### -Ladder
+
+Cria a classe Ladder que cria as escadas com a textura, posição e hitbox correspondente e depois desenha a mesma.
+------------------------------------------------------------------------------------------------------------------------------------
 ## Sprite Classes:
 
 Dentro desta pasta, que não é a mesma que a pasta Sprites do Content, encontram-se as classes Animation, Coins, Enemy e Player.
