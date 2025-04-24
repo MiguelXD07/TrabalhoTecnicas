@@ -134,6 +134,37 @@ e faz o mesmo para o background:
                             GameState.backgroundTiles.Add(new BackgroundTile(GameState.water2_texture, new Vector2(x * GameState.water2_texture.Width, y * GameState.water2_texture.Height)));
                             break;
 ```
+
+## -MovingPlatforms
+
+Cria as plataformas com a textura e posição correta:
+```
+        public MovingPlatform(Texture2D newTexture, Vector2 newPosition)
+        {
+            texture = newTexture;
+            position = newPosition;
+        }
+```
+E depois usa a função Update para mover a plataforma na horizontal e dá update ao retângulo para detectar colisões:
+```
+   public void Update()
+        {
+            position.X += velocity;
+            rectangle = new Rectangle((int)position.X, (int)position.Y, (int)texture.Width, (int)texture.Height);
+```
+Se a plataforma que se está a mover colidir com uma plataforma estática do jogo inverte a direção do objeto:
+```
+  foreach (Platform platform in GameState.platforms)
+            {
+                if (rectangle.Intersects(platform.rectangle)) // Om den rörande plattformen kolliderar med en vanlig plattform byter den riktning
+                {
+                    velocity = -velocity;
+                    start = -start;
+                }
+            }
+        }
+```
+E por fim desenha a plataforma móvel.
 ------------------------------------------------------------------------------------------------------------------------------------
 ## Sprite Classes:
 
