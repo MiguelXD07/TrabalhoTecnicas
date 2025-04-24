@@ -1,4 +1,4 @@
-# Trabalho Tecnicas
+# Trabalho Técnicas
 ## Créditos: https://github.com/loveskold/2DPlatformer/tree/main
 
 Grupo:\
@@ -8,9 +8,86 @@ Nuno Rafael Oliveira Santos nº33191
 
 O jogo é do tipo platformer, semelhante ao jogo Super Mario,...
 
+Os ficheiros do jogo estão divididos em pastas, sendo mais simples de corrigir erros.
 
+![image](https://github.com/user-attachments/assets/14141022-fb43-4abf-b44e-f8dc71bce449)
 
-Na classe Player, o criador colocou um bloco de codigo em que faz com que o personagem salte mais alto depedendo do tempo carregado no espaço.
+![image](https://github.com/user-attachments/assets/c24d301b-cc8b-43a6-9c0d-a70581bfc654)
+
+Dentro da pasta content o criador tem os sprites dos personagens e objetos juntamente com musica e sound effects para o jogo.
+
+![image](https://github.com/user-attachments/assets/da4bc1ec-0a7f-481b-9350-f39a3fc4878c)
+
+Dentro da pasta Sprites, que não é a mesma pasta que esta no Content, tem as classes Animation, Coin, Enemy e Player.
+
+------------------------------------------------------------------------------------------------------------------------------------
+Sprite Classes:
+
+### -Animation
+Na class Animation o código atualiza a hitbox das animações.
+Esta parte do código adiciona um retangulo (hitbox) para cada frame da spritesheet.
+```
+        public Animation(Texture2D newTexture, int numberOfFrames, float newFrameTime)
+        {
+            texture = newTexture;
+            frameTime = newFrameTime;
+            frameTimeLeft = frameTime;
+            frames = numberOfFrames;
+
+            var frameWidth = texture.Width / numberOfFrames;
+            var frameHeight = texture.Height;
+
+            for (int i = 0; i < frames; i++) // Lägger till en rektangel för varje frame i spritesheet
+            {
+                sourceRectangles.Add(new Rectangle(i * frameWidth, 0, frameWidth, frameHeight));
+            }
+        }
+```
+
+### -Coin
+Na class Coin apenas tem o código para a animação e criação das moedas.
+
+### -Enemy
+Na class Enemy o código cria e gerencia as ações dos inimigos.
+O criador colocou uma verificação em que se a hitbox do inimigo não encontrar chão, o mesmo muda de direção, utilizando a função Turn().
+```
+            intersected = false;
+            foreach (Platform platform in GameState.platforms)
+            {
+                if (rectangleRight.Intersects(platform.rectangle) || rectangleLeft.Intersects(platform.rectangle))
+                {
+                    Turn();
+                }
+                else if (turningRectangle.Intersects(platform.rectangle))
+                {
+                    intersected = true;
+                }
+            }
+            isGrounded = intersected;
+            
+            if (isGrounded == false) // Om turningRectangle inte längre rör plattformen vänder fienden håll
+            {
+                Turn();
+            }
+
+        public void Turn()
+        {
+            velocity.X = -velocity.X;
+            if (movingRight)
+            {
+                movingRight = false;
+            }
+            else if (!movingRight)
+            {
+                movingRight = true;
+            }
+        }
+```
+
+### -Player
+Na classe Player o código cria o personagem (player) e gerencia as ações de mexer e colisões do personagem com outros objetos.
+O criador colocou um bloco de codigo em que faz com que o personagem salte mais alto depedendo do tempo segurado no espaço e cria gravidade para o personagem.
+
 ```
 currentKeyboardState = Keyboard.GetState();
             if (previousKeyboardState.IsKeyDown(Keys.Space) && currentKeyboardState.IsKeyUp(Keys.Space) && velocity.Y < 0) // Varje gång man släpper Space
@@ -48,13 +125,42 @@ currentKeyboardState = Keyboard.GetState();
             #endregion
 ```
 
+Ainda na class Player o criador tem várias linhas de codiga para a colisão com os inimigos, moedas e plataformas.
+```
+            #region Kollisioner med coins
+
+            for (int i = 0; i < GameState.coins.Count; i++)
+            {
+                if (rectangle.Intersects(GameState.coins[i].rectangle))
+                {
+                    GameState.coins.RemoveAt(i);
+                    currentScore += 50;
+                    coin_sound.Play(0.07f, 0, 0);
+                    GameState.score_str = currentScore.ToString();
+                }
+            }
+
+            #endregion
+
+            #region Kollisioner med stegar
+
+            bool intersectingLadder = false;
+            foreach (Ladder ladder in GameState.ladders)
+            {
+                if (rectangle.Intersects(ladder.rectangle))
+                {
+                    intersectingLadder = true;
+                }
+            }
+            touchingLadder = intersectingLadder;
+```
 
 ------------------------------------------------------------------------------------------------------------------------------------
 States Classes:
 
 -State
 
-	Esta classe serve para ditar as propriedades que as classes State devem tomar.
+Esta classe serve para ditar as propriedades que as classes State devem tomar.
 
 ```
 public abstract class State 
@@ -78,11 +184,11 @@ public abstract class State
 
 -MenuState
 
-	A classe MenuState é utilizada ao abrir o jogo.
-	Ela cria um background e dois butões, o botão Play e o botão Exit.
-	Escrito no ecrã tem o nome do jogo e os controlos.
-	Carregar em Play muda para e dá reset ao GameState.
-	Carregar em Exit fecha o jogo.
+A classe MenuState é utilizada ao abrir o jogo.
+Ela cria um background e dois butões, o botão Play e o botão Exit.
+Escrito no ecrã tem o nome do jogo e os controlos.
+Carregar em Play muda para e dá reset ao GameState.
+Carregar em Exit fecha o jogo.
 
 ```
 public MenuState(Game1 game,GraphicsDevice graphics, ContentManager content)
@@ -123,10 +229,10 @@ public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 
 -GameState
 
-	Esta classe engloba todo o gameplay fora dos menus.
-	A classe cria e carrega todos os elementos a ser utilizados durante o gameplay.
-	A classe dita também as condições associadas ao jogo como a posição da camara, o temporizador, a posição de diferentes elementos e o estado do jogador.
-	Esta classe é portanto o culminar de todas as outras classes e dos outros elementos como tiles, texturas e efeitos sonoros.
+Esta classe engloba todo o gameplay fora dos menus.
+A classe cria e carrega todos os elementos a ser utilizados durante o gameplay.
+A classe dita também as condições associadas ao jogo como a posição da camara, o temporizador, a posição de diferentes elementos e o estado do jogador.
+Esta classe é portanto o culminar de todas as outras classes e dos outros elementos como tiles, texturas e efeitos sonoros.
 
 ```
  	public static List<Platform> platforms = new List<Platform>();
@@ -165,10 +271,10 @@ public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
 
 -DeadState
 
-	A classe DeadState é utilizada quando o jogador morre.
-	Ela muda o background para uma tela preta que diz que o jogador morreu e cria dois botões, um para dar respawn e outro para voltar para o menu.
-	O botão de respawn dá reset a todos os gamestates e reinicia o jogo.
-	O botão de menu volta para o menu principal (MenuState).
+A classe DeadState é utilizada quando o jogador morre.
+Ela muda o background para uma tela preta que diz que o jogador morreu e cria dois botões, um para dar respawn e outro para voltar para o menu.
+O botão de respawn dá reset a todos os gamestates e reinicia o jogo.
+O botão de menu volta para o menu principal (MenuState).
 
 ```
 public override void LoadContent()
@@ -225,9 +331,9 @@ public override void LoadContent()
 
 -EndState
 
-	A classe EndState é utilizada quando o jogador ganha o jogo.
-	A classe demonstra o Score e os Highscores passados.
-	Cria um botão Menu para voltar para o MenuState.
+A classe EndState é utilizada quando o jogador ganha o jogo.
+A classe demonstra o Score e os Highscores passados.
+Cria um botão Menu para voltar para o MenuState.
 
 ```
 public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -247,3 +353,35 @@ public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         }
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+### Game1:
+
+Dentro da classe Game1, o codigo define as dimensões da janela.
+```
+       public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = screenWidth; 
+            _graphics.PreferredBackBufferHeight = screenHeight;  
+            _graphics.ApplyChanges();
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+```
+
+Cria um temporizador de 100 segundos para cada nivel
+```
+ protected override void Update(GameTime gameTime)
+        {
+            TotalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_nextState != null) // Om nextState har ett värde ska en ny state visas
+            {
+                _currentState = _nextState;
+                _currentState.LoadContent(); // Laddar in nya staten
+                _nextState = null;
+            }
+            _currentState.Update(gameTime); // Uppdaterar aktuella staten
+            base.Update(gameTime);
+        }
+```
+
+Muda os niveis e 
