@@ -165,6 +165,35 @@ Se a plataforma que se está a mover colidir com uma plataforma estática do jog
         }
 ```
 E por fim desenha a plataforma móvel.
+
+## -Platform
+
+Cria a plataforma com as informações correspondentes:
+-textura;
+-posição; 
+-hitbox;
+-stats (se é bouncy como os trampolins ou mata o player);
+
+```
+        public Platform(Texture2D newTexture, Vector2 newPosition, bool deadly, bool onlySolidTop, bool bouncy)
+        {
+            texture = newTexture;
+            position = newPosition;
+            rectangle = new Rectangle((int)position.X, (int)position.Y, (int)texture.Width, (int)texture.Height);
+            rectangleTop = new Rectangle((int)position.X, (int)position.Y, (int)texture.Width, 25);
+            isDeadly = deadly;
+            isOnlySolidTop = onlySolidTop;
+            isBouncy = bouncy;
+        }
+```
+
+E por fim desenha a mesma:
+```
+  public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, rectangle, Color.White);
+        }
+```
 ------------------------------------------------------------------------------------------------------------------------------------
 ## Sprite Classes:
 
