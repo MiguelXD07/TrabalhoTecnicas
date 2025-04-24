@@ -18,10 +18,10 @@ Dentro da pasta content o criador tem os sprites dos personagens e objetos junta
 
 ![image](https://github.com/user-attachments/assets/da4bc1ec-0a7f-481b-9350-f39a3fc4878c)
 
-Dentro da pasta Sprites, que não é a mesma pasta que esta no Content, tem as classes Animation, Coin, Enemy e Player.
-
 ------------------------------------------------------------------------------------------------------------------------------------
 ## Sprite Classes:
+
+Dentro desta pasta, que não é a mesma que a pasta Sprites do Content, encontram-se as classes Animation, Coins, Enemy e Player.
 
 ### -Animation
 Na class Animation o código atualiza a hitbox das animações.
