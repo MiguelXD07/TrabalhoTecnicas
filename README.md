@@ -6,7 +6,9 @@ Guilherme Carneiro nº31463\
 Miguel Ferreira nº31472\
 Nuno Rafael Oliveira Santos nº33191
 
-O jogo é do tipo platformer, semelhante ao jogo Super Mario,...
+O jogo é do tipo platformer, semelhante ao jogo Super Mario. 
+Os controlos são simples, A e D para andar e ESPAÇO para saltar.
+Tem como objetivo coletar moedas e acabar os 3 niveis antes do tempo acabar e sem perder para os inimigos. Além disso, o jogo guarda o highscore no fim do ultimo nível.
 
 Os ficheiros do jogo estão divididos em pastas, sendo mais simples de corrigir erros.
 
